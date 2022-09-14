@@ -224,7 +224,6 @@ lvim.keys.normal_mode["tt"] = ":q <CR>"
 lvim.keys.normal_mode["<space>"] = "viwye<space><ESC>" -- yank word under cursor
 lvim.keys.normal_mode["<space><space>"] = 'viw"_d"+Pa<ESC>' -- replace word under cursor
 lvim.keys.normal_mode["<leader>r"] = ":%s/\\<<C-r><C-w>\\>//g<Left><Left>"
-lvim.keys.normal_mode["<leader>t"] = ":SymbolsOutline <CR>"
 lvim.keys.normal_mode["JK"] = "<ESC>"
 lvim.keys.normal_mode["H"] = "<cmd> :BufferLineCyclePrev<CR>"
 lvim.keys.normal_mode["L"] = "<cmd> :BufferLineCycleNext<CR>"
@@ -232,11 +231,17 @@ lvim.keys.normal_mode["<F3>"] = "<cmd> :NvimTreeToggle<CR>"
 
 lvim.builtin.which_key.mappings["f"] = {
   name = "+Telescope",
-  t = { "<cmd>Telescope<CR>", "Telescope" },
+  c = { "<cmd>Telescope<CR>", "Telescope" },
   w = { "<cmd>Telescope live_grep<CR>", "Live Grep" },
   f = { "<cmd>Telescope find_files find_command=fd,--type,file,--hidden,--exclude,.git<CR>", "Find Files" },
   p = { "<cmd>Telescope projects<CR>", "Projects" },
-  o = { "<cmd>Telescope oldfiles<CR>", "Recently Used Files" },
+  t = { "<cmd>Telescope colorscheme layout_config={height=60} enable_preview=true<CR>", "Colorschemes" },
+}
+
+lvim.builtin.which_key.mappings["t"] = {
+  name = "+ToggleTerm",
+  a = { "<cmd>ToggleTerm direction=horizontal size=25<CR>", "Horizontal Terminal" },
+  t = { "<cmd>ToggleTerm direction=float<CR>", "Floating Terminal" },
 }
 
 lvim.builtin.which_key.mappings["g"] = {
