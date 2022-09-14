@@ -193,6 +193,20 @@ lvim.builtin.lualine.style = "default"
 lvim.builtin.telescope.defaults.layout_config.prompt_position = "top"
 lvim.builtin.telescope.defaults.sorting_strategy = "ascending"
 lvim.builtin.telescope.pickers.find_files.hidden = true
+lvim.builtin.telescope.defaults.path_display = { "smart" }
+
+lvim.builtin.alpha.dashboard.section.buttons.entries = {
+  { "e", "  New File  ", ":ene <BAR> startinsert <CR>" },
+  { "SPC f", "  Find File", "<cmd>Telescope find_files find_command=fd,--type,file,--hidden,--exclude,.git<CR>" },
+  { "SPC P", "  Recent Projects ", "<CMD>Telescope projects<CR>" },
+  { "SPC s r", "  Recently Used Files", "<CMD>Telescope oldfiles<CR>" },
+  { "SPC s t", "  Live Grep", "<CMD>Telescope live_grep<CR>" },
+  {
+    "SPC L c",
+    "  Configuration",
+    "<CMD>edit " .. require("lvim.config"):get_user_config_path() .. " <CR>",
+  }
+}
 
 lvim.builtin.nvimtree.setup.view.width = 50
 lvim.builtin.nvimtree.setup.view.mappings.list = {
@@ -211,9 +225,6 @@ lvim.keys.normal_mode["<space>"] = "viwye<space><ESC>" -- yank word under cursor
 lvim.keys.normal_mode["<space><space>"] = 'viw"_d"+Pa<ESC>' -- replace word under cursor
 lvim.keys.normal_mode["<leader>r"] = ":%s/\\<<C-r><C-w>\\>//g<Left><Left>"
 lvim.keys.normal_mode["<leader>t"] = ":SymbolsOutline <CR>"
-lvim.keys.normal_mode["<leader>dd"] = ":DiffviewOpen HEAD"
-lvim.keys.normal_mode["<leader>dc"] = ":DiffviewClose <CR>"
-lvim.keys.normal_mode["<leader>df"] = ":DiffviewFileHistory <CR>"
 lvim.keys.normal_mode["JK"] = "<ESC>"
 lvim.keys.normal_mode["H"] = "<cmd> :BufferLineCyclePrev<CR>"
 lvim.keys.normal_mode["L"] = "<cmd> :BufferLineCycleNext<CR>"
@@ -225,7 +236,19 @@ lvim.builtin.which_key.mappings["f"] = {
   w = { "<cmd>Telescope live_grep<CR>", "Live Grep" },
   f = { "<cmd>Telescope find_files find_command=fd,--type,file,--hidden,--exclude,.git<CR>", "Find Files" },
   p = { "<cmd>Telescope projects<CR>", "Projects" },
+  o = { "<cmd>Telescope oldfiles<CR>", "Recently Used Files" },
 }
+
+lvim.builtin.which_key.mappings["g"] = {
+  name = "+Telescope",
+  c = { ":DiffviewOpen HEAD", "Complare HEAD to specified <commit...>" },
+  d = { "<cmd>DiffviewClose<CR>", "Close Diffview" },
+  f = { "<cmd>DiffviewFileHistory<CR>", "View git history" },
+}
+
+lvim.keys.normal_mode["<leader>dd"] = ":DiffviewOpen HEAD"
+lvim.keys.normal_mode["<leader>dc"] = ":DiffviewClose <CR>"
+lvim.keys.normal_mode["<leader>df"] = ":DiffviewFileHistory <CR>"
 
 lvim.builtin.dap.active = true
 
@@ -234,6 +257,7 @@ lvim.plugins = {
   { "folke/tokyonight.nvim" },
   { "tiagovla/tokyodark.nvim" },
   { "simrat39/rust-tools.nvim" },
+  { "sindrets/diffview.nvim" },
 }
 
 -- >>>>>>> custom settings end here <<<<<<<
