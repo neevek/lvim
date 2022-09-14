@@ -197,9 +197,9 @@ lvim.builtin.telescope.defaults.path_display = { "smart" }
 
 lvim.builtin.alpha.dashboard.section.buttons.entries = {
   { "e", "  New File  ", ":ene <BAR> startinsert <CR>" },
-  { "SPC f", "  Find File", "<cmd>Telescope find_files find_command=fd,--type,file,--hidden,--exclude,.git<CR>" },
-  { "SPC P", "  Recent Projects ", "<CMD>Telescope projects<CR>" },
-  { "SPC s r", "  Recently Used Files", "<CMD>Telescope oldfiles<CR>" },
+  { "SPC f f", "  Find File", "<cmd>Telescope find_files find_command=fd,--type,file,--hidden,--exclude,.git<CR>" },
+  { "SPC f p", "  Recent Projects", "<CMD>Telescope projects theme=dropdown layout_config={height=60,width=120}<CR>" },
+  { "SPC f o", "  Recently Used Files", "<CMD>Telescope oldfiles<CR>" },
   { "SPC s t", "  Live Grep", "<CMD>Telescope live_grep<CR>" },
   {
     "SPC L c",
@@ -220,7 +220,7 @@ lvim.builtin.nvimtree.setup.view.mappings.list = {
 lvim.keys.normal_mode["<leader>cc"] = ":Telescope <CR>"
 lvim.keys.normal_mode["<leader>w"] = ":w <CR>"
 lvim.keys.normal_mode["<leader>q"] = ":qa <CR>"
-lvim.keys.normal_mode["tt"] = ":q <CR>"
+lvim.keys.normal_mode["tt"] = ":bwipeout <CR>"
 lvim.keys.normal_mode["<space>"] = "viwye<space><ESC>" -- yank word under cursor
 lvim.keys.normal_mode["<space><space>"] = 'viw"_d"+Pa<ESC>' -- replace word under cursor
 lvim.keys.normal_mode["<leader>r"] = ":%s/\\<<C-r><C-w>\\>//g<Left><Left>"
@@ -229,13 +229,15 @@ lvim.keys.normal_mode["H"] = "<cmd> :BufferLineCyclePrev<CR>"
 lvim.keys.normal_mode["L"] = "<cmd> :BufferLineCycleNext<CR>"
 lvim.keys.normal_mode["<F3>"] = "<cmd> :NvimTreeToggle<CR>"
 
+lvim.builtin.which_key.setup.triggers = { "<leader>" }
 lvim.builtin.which_key.mappings["f"] = {
   name = "+Telescope",
   c = { "<cmd>Telescope<CR>", "Telescope" },
   w = { "<cmd>Telescope live_grep<CR>", "Live Grep" },
   f = { "<cmd>Telescope find_files find_command=fd,--type,file,--hidden,--exclude,.git<CR>", "Find Files" },
-  p = { "<cmd>Telescope projects<CR>", "Projects" },
+  p = { "<cmd>Telescope projects theme=dropdown layout_config={height=60,width=120}<CR>", "Projects" },
   t = { "<cmd>Telescope colorscheme layout_config={height=60} enable_preview=true<CR>", "Colorschemes" },
+  o = { "<cmd>Telescope oldfiles<CR>", "Recently Used Files" },
 }
 
 lvim.builtin.which_key.mappings["t"] = {
@@ -251,18 +253,39 @@ lvim.builtin.which_key.mappings["g"] = {
   f = { "<cmd>DiffviewFileHistory<CR>", "View git history" },
 }
 
-lvim.keys.normal_mode["<leader>dd"] = ":DiffviewOpen HEAD"
-lvim.keys.normal_mode["<leader>dc"] = ":DiffviewClose <CR>"
-lvim.keys.normal_mode["<leader>df"] = ":DiffviewFileHistory <CR>"
-
 lvim.builtin.dap.active = true
 
 lvim.plugins = {
   { "lunarvim/colorschemes" },
   { "folke/tokyonight.nvim" },
   { "tiagovla/tokyodark.nvim" },
-  { "simrat39/rust-tools.nvim" },
   { "sindrets/diffview.nvim" },
+  { "williamboman/nvim-lsp-installer" },
+  {
+    "simrat39/rust-tools.nvim",
+    config = function()
+      local lsp_installer_servers = require "nvim-lsp-installer.servers"
+      local _, requested_server = lsp_installer_servers.get_server "rust_analyzer"
+      require("rust-tools").setup({
+        tools = {
+          autoSetHints = true,
+          hover_with_actions = true,
+          runnables = {
+            use_telescope = true,
+          },
+        },
+        server = {
+          cmd_env = requested_server._default_options.cmd_env,
+          on_attach = require("lvim.lsp").common_on_attach,
+          on_init = require("lvim.lsp").common_on_init,
+        },
+      })
+    end,
+    ft = { "rust", "rs" },
+  },
 }
+
+-- rust configuration
+-- vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "rust_analyzer" })
 
 -- >>>>>>> custom settings end here <<<<<<<
