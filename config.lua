@@ -196,10 +196,10 @@ lvim.builtin.telescope.pickers.find_files.hidden = true
 lvim.builtin.telescope.defaults.path_display = { "smart" }
 
 lvim.builtin.alpha.dashboard.section.buttons.entries = {
-  { "e", "  New File  ", ":ene <BAR> startinsert <CR>" },
-  { "SPC f f", "  Find File", "<cmd>Telescope find_files find_command=fd,--type,file,--hidden,--exclude,.git<CR>" },
   { "SPC f p", "  Recent Projects", "<CMD>Telescope projects theme=dropdown layout_config={height=60,width=120}<CR>" },
   { "SPC f o", "  Recently Used Files", "<CMD>Telescope oldfiles<CR>" },
+  { "e", "  New File  ", ":ene <BAR> startinsert <CR>" },
+  { "SPC f f", "  Find File", "<cmd>Telescope find_files find_command=fd,--type,file,--hidden,--exclude,.git<CR>" },
   { "SPC s t", "  Live Grep", "<CMD>Telescope live_grep<CR>" },
   {
     "SPC L c",
@@ -209,17 +209,15 @@ lvim.builtin.alpha.dashboard.section.buttons.entries = {
 }
 
 lvim.builtin.nvimtree.setup.view.width = 50
-lvim.builtin.nvimtree.setup.view.mappings.list = {
-  { key = { "e", "<CR>", "o" }, action = "edit", mode = "n" },
+lvim.builtin.nvimtree.setup.view.mappings.list = { { key = { "e", "<CR>", "o" }, action = "edit", mode = "n" },
   { key = "h", action = "close_node" },
   { key = "s", action = "split" },
   { key = "v", action = "vsplit" },
   { key = "C", action = "cd" },
 }
 
-lvim.keys.normal_mode["<leader>cc"] = ":Telescope <CR>"
-lvim.keys.normal_mode["<leader>w"] = ":w <CR>"
-lvim.keys.normal_mode["<leader>q"] = ":qa <CR>"
+-- lvim.keys.normal_mode["<leader>w"] = ":w <CR>"
+-- lvim.keys.normal_mode["<leader>q"] = ":qa <CR>"
 lvim.keys.normal_mode["tt"] = ":bwipeout <CR>"
 lvim.keys.normal_mode["<space>"] = "viwye<space><ESC>" -- yank word under cursor
 lvim.keys.normal_mode["<space><space>"] = 'viw"_d"+Pa<ESC>' -- replace word under cursor
@@ -253,8 +251,15 @@ lvim.builtin.which_key.mappings["g"] = {
   f = { "<cmd>DiffviewFileHistory<CR>", "View git history" },
 }
 
-lvim.builtin.dap.active = true
+lvim.builtin.which_key.mappings["c"] = {
+  name = "+Crates",
+  i = { ":lua require('crates').show_crate_popup()<CR>", "Show crate information" },
+  v = { ":lua require('crates').show_versions_popup()<CR>", "Show versions" },
+  f = { ":lua require('crates').show_features_popup()<CR>", "Show features" },
+  d = { ":lua require('crates').show_dependencies_popup()<CR>", "Show depedencies" },
+}
 
+lvim.builtin.dap.active = true
 lvim.plugins = {
   { "lunarvim/colorschemes" },
   { "folke/tokyonight.nvim" },
@@ -262,30 +267,74 @@ lvim.plugins = {
   { "sindrets/diffview.nvim" },
   { "williamboman/nvim-lsp-installer" },
   {
+    "saecki/crates.nvim",
+    config = function()
+      require("crates").setup({
+        popup = {
+          autofocus = true,
+          show_version_date = true,
+          copy_register = '"',
+          style = "minimal",
+          border = "rounded",
+        }
+      })
+
+    end,
+  },
+  {
     "simrat39/rust-tools.nvim",
     config = function()
-      local lsp_installer_servers = require "nvim-lsp-installer.servers"
-      local _, requested_server = lsp_installer_servers.get_server "rust_analyzer"
-      require("rust-tools").setup({
+      local status_ok, rust_tools = pcall(require, "rust-tools")
+      if not status_ok then
+        return
+      end
+
+      local opts = {
         tools = {
-          autoSetHints = true,
-          hover_with_actions = true,
-          runnables = {
-            use_telescope = true,
+          executor = require("rust-tools/executors").termopen, -- can be quickfix or termopen
+          reload_workspace_from_cargo_toml = true,
+          inlay_hints = {
+            auto = true,
+            only_current_line = false,
+            show_parameter_hints = true,
+            parameter_hints_prefix = " <-",
+            other_hints_prefix = "=> ",
+            max_len_align = false,
+            max_len_align_padding = 1,
+            right_align = false,
+            right_align_padding = 7,
+            highlight = "Comment",
+          },
+          hover_actions = {
+            auto_focus = true,
+            border = {
+              { "╭", "FloatBorder" },
+              { "─", "FloatBorder" },
+              { "╮", "FloatBorder" },
+              { "│", "FloatBorder" },
+              { "╯", "FloatBorder" },
+              { "─", "FloatBorder" },
+              { "╰", "FloatBorder" },
+              { "│", "FloatBorder" },
+            },
           },
         },
         server = {
-          cmd_env = requested_server._default_options.cmd_env,
           on_attach = require("lvim.lsp").common_on_attach,
           on_init = require("lvim.lsp").common_on_init,
+          settings = {
+            ["rust-analyzer"] = {
+              checkOnSave = {
+                command = "clippy"
+              }
+            }
+          },
         },
-      })
+      }
+      rust_tools.setup(opts)
     end,
     ft = { "rust", "rs" },
   },
 }
-
--- rust configuration
--- vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "rust_analyzer" })
 
 -- >>>>>>> custom settings end here <<<<<<<
