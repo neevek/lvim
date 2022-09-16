@@ -192,6 +192,7 @@ lvim.builtin.bufferline.options.indicator_icon = nil
 lvim.builtin.bufferline.options.indicator = { style = "icon", icon = "▎" }
 lvim.builtin.bufferline.options.always_show_bufferline = true
 lvim.builtin.lualine.style = "default"
+lvim.builtin.lualine.options.theme = "horizon"
 lvim.builtin.telescope.defaults.layout_config.prompt_position = "top"
 lvim.builtin.telescope.defaults.sorting_strategy = "ascending"
 lvim.builtin.telescope.pickers.find_files.hidden = true
