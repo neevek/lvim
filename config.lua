@@ -63,6 +63,7 @@ lvim.builtin.notify.active = true
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
+lvim.builtin.nvimtree.setup.filters.dotfiles = true
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
@@ -189,6 +190,7 @@ vim.opt.ignorecase = true
 
 lvim.builtin.bufferline.options.indicator_icon = nil
 lvim.builtin.bufferline.options.indicator = { style = "icon", icon = "▎" }
+lvim.builtin.bufferline.options.always_show_bufferline = true
 lvim.builtin.lualine.style = "default"
 lvim.builtin.telescope.defaults.layout_config.prompt_position = "top"
 lvim.builtin.telescope.defaults.sorting_strategy = "ascending"
@@ -208,16 +210,22 @@ lvim.builtin.alpha.dashboard.section.buttons.entries = {
   }
 }
 
+lvim.builtin.nvimtree.setup.renderer.indent_markers.enable = true
 lvim.builtin.nvimtree.setup.view.width = 50
-lvim.builtin.nvimtree.setup.view.mappings.list = { { key = { "e", "<CR>", "o" }, action = "edit", mode = "n" },
+lvim.builtin.nvimtree.setup.view.mappings.list = {
+  { key = { "e", "<CR>", "o" }, action = "edit", mode = "n" },
   { key = "h", action = "close_node" },
   { key = "s", action = "split" },
   { key = "v", action = "vsplit" },
   { key = "C", action = "cd" },
 }
 
--- lvim.keys.normal_mode["<leader>w"] = ":w <CR>"
--- lvim.keys.normal_mode["<leader>q"] = ":qa <CR>"
+-- disable signcolomn when opening terminal
+vim.api.nvim_create_autocmd("TermEnter", {
+  pattern = { "term://*toggleterm#*" },
+  command = "setlocal signcolumn=no",
+})
+
 lvim.keys.normal_mode["tt"] = ":bwipeout <CR>"
 lvim.keys.normal_mode["<space>"] = "viwye<space><ESC>" -- yank word under cursor
 lvim.keys.normal_mode["<space><space>"] = 'viw"_d"+Pa<ESC>' -- replace word under cursor
@@ -226,6 +234,10 @@ lvim.keys.normal_mode["JK"] = "<ESC>"
 lvim.keys.normal_mode["H"] = "<cmd> :BufferLineCyclePrev<CR>"
 lvim.keys.normal_mode["L"] = "<cmd> :BufferLineCycleNext<CR>"
 lvim.keys.normal_mode["<F3>"] = "<cmd> :NvimTreeToggle<CR>"
+lvim.keys.normal_mode["<tab>"] = "<cmd> :lua vim.lsp.buf.code_action() <CR>"
+lvim.keys.normal_mode["<leader>s"] = "<cmd> :lua require'popui.diagnostics-navigator'() <CR>"
+lvim.keys.normal_mode["<leader>u"] = "<cmd> :PackerSync <CR>"
+lvim.keys.normal_mode["I"] = "<cmd> :PackerSync <CR>"
 
 lvim.builtin.which_key.setup.triggers = { "<leader>" }
 lvim.builtin.which_key.mappings["f"] = {
@@ -266,6 +278,14 @@ lvim.plugins = {
   { "tiagovla/tokyodark.nvim" },
   { "sindrets/diffview.nvim" },
   { "williamboman/nvim-lsp-installer" },
+  { "RishabhRD/popfix" },
+  {
+    "hood/popui.nvim",
+    config = function()
+      vim.ui.select = require "popui.ui-overrider"
+      vim.ui.input = require "popui.input-overrider"
+    end
+  },
   {
     "saecki/crates.nvim",
     config = function()
