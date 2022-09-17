@@ -238,7 +238,6 @@ lvim.keys.normal_mode["<F3>"] = "<cmd> :NvimTreeToggle<CR>"
 lvim.keys.normal_mode["<tab>"] = "<cmd> :lua vim.lsp.buf.code_action() <CR>"
 lvim.keys.normal_mode["<leader>s"] = "<cmd> :lua require'popui.diagnostics-navigator'() <CR>"
 lvim.keys.normal_mode["<leader>u"] = "<cmd> :PackerSync <CR>"
-lvim.keys.normal_mode["I"] = "<cmd> :PackerSync <CR>"
 
 lvim.builtin.which_key.setup.triggers = { "<leader>" }
 lvim.builtin.which_key.mappings["f"] = {
@@ -280,6 +279,7 @@ lvim.plugins = {
   { "sindrets/diffview.nvim" },
   { "williamboman/nvim-lsp-installer" },
   { "RishabhRD/popfix" },
+  { "lukas-reineke/indent-blankline.nvim" },
   {
     "hood/popui.nvim",
     config = function()
