@@ -59,11 +59,13 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile
 lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
-lvim.builtin.notify.active = true
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 lvim.builtin.nvimtree.setup.filters.dotfiles = true
+lvim.builtin.notify.active = true
+lvim.builtin.notify.opts.max_width = 50
+lvim.builtin.notify.opts.max_height = 10
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
@@ -188,6 +190,8 @@ lvim.builtin.treesitter.highlight.enabled = true
 vim.opt.whichwrap = "b,s"
 vim.opt.ignorecase = true
 
+vim.cmd [[hi Comment guifg=#666666]]
+
 lvim.builtin.bufferline.options.indicator_icon = nil
 lvim.builtin.bufferline.options.indicator = { style = "icon", icon = "▎" }
 lvim.builtin.bufferline.options.always_show_bufferline = true
@@ -197,6 +201,7 @@ lvim.builtin.telescope.defaults.layout_config.prompt_position = "top"
 lvim.builtin.telescope.defaults.sorting_strategy = "ascending"
 lvim.builtin.telescope.pickers.find_files.hidden = true
 lvim.builtin.telescope.defaults.path_display = { "smart" }
+lvim.builtin.cmp.completion.completeopt = "menu,menuone,noinsert"
 
 lvim.builtin.alpha.dashboard.section.buttons.entries = {
   { "SPC f p", "  Recent Projects", "<CMD>Telescope projects theme=dropdown layout_config={height=60,width=120}<CR>" },
@@ -243,6 +248,7 @@ lvim.builtin.which_key.setup.triggers = { "<leader>" }
 lvim.builtin.which_key.mappings["f"] = {
   name = "+Telescope",
   c = { "<cmd>Telescope<CR>", "Telescope" },
+  r = { "<cmd>Telescope resume<CR>", "Telescope" },
   w = { "<cmd>Telescope live_grep<CR>", "Live Grep" },
   f = { "<cmd>Telescope find_files find_command=fd,--type,file,--hidden,--exclude,.git<CR>", "Find Files" },
   p = { "<cmd>Telescope projects theme=dropdown layout_config={height=60,width=120}<CR>", "Projects" },
@@ -257,7 +263,7 @@ lvim.builtin.which_key.mappings["t"] = {
 }
 
 lvim.builtin.which_key.mappings["g"] = {
-  name = "+Telescope",
+  name = "+Diffview",
   c = { ":DiffviewOpen HEAD", "Complare HEAD to specified <commit...>" },
   d = { "<cmd>DiffviewClose<CR>", "Close Diffview" },
   f = { "<cmd>DiffviewFileHistory<CR>", "View git history" },
