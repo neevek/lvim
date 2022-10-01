@@ -190,8 +190,6 @@ lvim.builtin.treesitter.highlight.enabled = true
 vim.opt.whichwrap = "b,s"
 vim.opt.ignorecase = true
 
-vim.cmd [[hi Comment guifg=#666666]]
-
 lvim.builtin.bufferline.options.indicator_icon = nil
 lvim.builtin.bufferline.options.indicator = { style = "icon", icon = "▎" }
 lvim.builtin.bufferline.options.always_show_bufferline = true
@@ -233,8 +231,8 @@ vim.api.nvim_create_autocmd("TermEnter", {
 })
 
 lvim.keys.normal_mode["tt"] = ":bwipeout <CR>"
-lvim.keys.normal_mode["<space>"] = "viwye<space><ESC>" -- yank word under cursor
-lvim.keys.normal_mode["<space><space>"] = 'viw"_d"+Pa<ESC>' -- replace word under cursor
+lvim.keys.normal_mode["<space>"] = "yiw" -- yank word under cursor
+lvim.keys.normal_mode["<space><space>"] = 'viw"0p' -- replace word under cursor
 lvim.keys.normal_mode["<leader>r"] = ":%s/\\<<C-r><C-w>\\>//g<Left><Left>"
 lvim.keys.normal_mode["JK"] = "<ESC>"
 lvim.keys.normal_mode["H"] = "<cmd> :BufferLineCyclePrev<CR>"
@@ -364,4 +362,5 @@ lvim.plugins = {
   },
 }
 
+vim.cmd [[hi Comment guifg=#666666]]
 -- >>>>>>> custom settings end here <<<<<<<
