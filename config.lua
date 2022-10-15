@@ -285,6 +285,11 @@ lvim.plugins = {
   { "williamboman/nvim-lsp-installer" },
   { "RishabhRD/popfix" },
   { "lukas-reineke/indent-blankline.nvim" },
+  { "ggandor/leap.nvim",
+    config = function()
+      require('leap').add_default_mappings()
+    end
+  },
   {
     "hood/popui.nvim",
     config = function()
