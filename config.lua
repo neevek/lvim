@@ -63,9 +63,6 @@ lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 lvim.builtin.nvimtree.setup.filters.dotfiles = true
-lvim.builtin.notify.active = true
-lvim.builtin.notify.opts.max_width = 50
-lvim.builtin.notify.opts.max_height = 10
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
@@ -237,8 +234,8 @@ lvim.keys.normal_mode["<leader>r"] = ":%s/\\<<C-r><C-w>\\>//g<Left><Left>"
 lvim.keys.normal_mode["H"] = "<cmd> :BufferLineCyclePrev<CR>"
 lvim.keys.normal_mode["L"] = "<cmd> :BufferLineCycleNext<CR>"
 lvim.keys.normal_mode["<F3>"] = "<cmd> :NvimTreeToggle<CR>"
-lvim.keys.normal_mode["<tab>"] = "<cmd> :lua vim.lsp.buf.code_action() <CR>"
-lvim.keys.normal_mode["<leader>s"] = "<cmd> :lua require'popui.diagnostics-navigator'() <CR>"
+-- lvim.keys.normal_mode["<tab>"] = "<cmd> :lua vim.lsp.buf.code_action() <CR>"
+-- lvim.keys.normal_mode["<leader>s"] = "<cmd> :lua require'popui.diagnostics-navigator'() <CR>"
 lvim.keys.normal_mode["<leader>u"] = "<cmd> :PackerSync <CR>"
 lvim.keys.insert_mode["jk"] = "<ESC>"
 lvim.keys.insert_mode["JK"] = "<ESC>"
@@ -279,24 +276,10 @@ lvim.builtin.which_key.mappings["c"] = {
 lvim.builtin.dap.active = true
 lvim.plugins = {
   { "lunarvim/colorschemes" },
-  { "folke/tokyonight.nvim" },
   { "tiagovla/tokyodark.nvim" },
   { "sindrets/diffview.nvim" },
   { "williamboman/nvim-lsp-installer" },
   { "RishabhRD/popfix" },
-  { "lukas-reineke/indent-blankline.nvim" },
-  { "ggandor/leap.nvim",
-    config = function()
-      require('leap').add_default_mappings()
-    end
-  },
-  {
-    "hood/popui.nvim",
-    config = function()
-      vim.ui.select = require "popui.ui-overrider"
-      vim.ui.input = require "popui.input-overrider"
-    end
-  },
   {
     "saecki/crates.nvim",
     config = function()
@@ -315,58 +298,35 @@ lvim.plugins = {
   {
     "simrat39/rust-tools.nvim",
     config = function()
-      local status_ok, rust_tools = pcall(require, "rust-tools")
-      if not status_ok then
-        return
-      end
+      local rt = require("rust-tools")
 
-      local opts = {
+      rt.setup({
+        server = {
+          on_attach = function(_, bufnr)
+            -- Hover actions
+            vim.keymap.set("n", "<Leader>s", rt.hover_actions.hover_actions, { buffer = bufnr })
+            -- Code action groups
+            vim.keymap.set("n", "<TAB>", rt.code_action_group.code_action_group, { buffer = bufnr })
+          end,
+        },
         tools = {
-          executor = require("rust-tools/executors").termopen, -- can be quickfix or termopen
-          reload_workspace_from_cargo_toml = true,
           inlay_hints = {
             auto = true,
             only_current_line = false,
             show_parameter_hints = true,
-            parameter_hints_prefix = " <-",
-            other_hints_prefix = "=> ",
+            parameter_hints_prefix = " <- ",
+            other_hints_prefix = " => ",
             max_len_align = false,
             max_len_align_padding = 1,
             right_align = false,
             right_align_padding = 7,
             highlight = "Comment",
           },
-          hover_actions = {
-            auto_focus = true,
-            border = {
-              { "╭", "FloatBorder" },
-              { "─", "FloatBorder" },
-              { "╮", "FloatBorder" },
-              { "│", "FloatBorder" },
-              { "╯", "FloatBorder" },
-              { "─", "FloatBorder" },
-              { "╰", "FloatBorder" },
-              { "│", "FloatBorder" },
-            },
-          },
         },
-        server = {
-          on_attach = require("lvim.lsp").common_on_attach,
-          on_init = require("lvim.lsp").common_on_init,
-          settings = {
-            ["rust-analyzer"] = {
-              checkOnSave = {
-                command = "clippy"
-              }
-            }
-          },
-        },
-      }
-      rust_tools.setup(opts)
+      })
     end,
-    ft = { "rust", "rs" },
   },
 }
 
 vim.cmd [[hi Comment guifg=#666666]]
--- >>>>>>> custom settings end here <<<<<<<
+-- >>>>>>> custom settings end hereqkjjjj <<<<<<<
