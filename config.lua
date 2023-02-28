@@ -263,6 +263,7 @@ lvim.builtin.which_key.mappings["g"] = {
   c = { ":DiffviewOpen HEAD", "Complare HEAD to specified <commit...>" },
   d = { "<cmd>DiffviewClose<CR>", "Close Diffview" },
   f = { "<cmd>DiffviewFileHistory<CR>", "View git history" },
+  b = { "<cmd>ToggleBlameLine<CR>", "Blame" },
 }
 
 lvim.builtin.which_key.mappings["c"] = {
@@ -280,6 +281,7 @@ lvim.plugins = {
   { "sindrets/diffview.nvim" },
   { "williamboman/nvim-lsp-installer" },
   { "RishabhRD/popfix" },
+  { "tveskag/nvim-blame-line" },
   {
     "saecki/crates.nvim",
     config = function()
@@ -328,5 +330,9 @@ lvim.plugins = {
   },
 }
 
-vim.cmd [[hi Comment guifg=#666666]]
--- >>>>>>> custom settings end hereqkjjjj <<<<<<<
+vim.cmd [[
+hi Comment guifg=#666666
+let g:blameLineVirtualTextHighlight = 'Question'
+let g:blameLineGitFormat = ' -> %h | %an | %ar | %s'
+]]
+-- >>>>>>> custom settings end here <<<<<<<
