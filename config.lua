@@ -229,7 +229,7 @@ vim.api.nvim_create_autocmd("TermEnter", {
 
 lvim.keys.normal_mode["tt"] = ":bwipeout <CR>"
 lvim.keys.normal_mode["<space>"] = "yiw" -- yank word under cursor
-lvim.keys.normal_mode["<space><space>"] = 'viw"0p' -- replace word under cursor
+lvim.keys.normal_mode["<space><space>"] = 'viw"+p' -- replace word under cursor
 lvim.keys.normal_mode["<leader>r"] = ":%s/\\<<C-r><C-w>\\>//g<Left><Left>"
 lvim.keys.normal_mode["H"] = "<cmd> :BufferLineCyclePrev<CR>"
 lvim.keys.normal_mode["L"] = "<cmd> :BufferLineCycleNext<CR>"
